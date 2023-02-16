@@ -15,3 +15,14 @@ En la consola aparecen las rutas para hacer peticiones al proyecto, en http y ht
 
 5. Para ver la documentación swagger del proyecto:
 http://localhost:5151/swagger/index.html
+
+====================================================================================
+En el archivo WebApiAutores.csproj se cambió la línea
+
+<Nullable>enable</Nullable>
+a esta otra:
+<Nullable>disable</Nullable>
+
+Para desactivar los tipos de referencia NO Nulos, así no será necesario estar marcando
+como Nullable los tipos de referencia en la aplicación que puedan ser nulos, de lo 
+contrario podrían aparecer errores.
