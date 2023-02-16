@@ -6,3 +6,12 @@ dotnet new webapi -o <Nombre del proyecto>
 
 3.  Para crear un archivo .gitignore de .net:
 dotnet new gitignore
+
+4.  Para correr un proyecto .net desde la terminal
+dotnet run
+
+En la consola aparecen las rutas para hacer peticiones al proyecto, en http y https 
+(si es que está disponible).
+
+5. Para ver la documentación swagger del proyecto:
+http://localhost:5151/swagger/index.html
