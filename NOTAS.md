@@ -26,3 +26,8 @@ a esta otra:
 Para desactivar los tipos de referencia NO Nulos, así no será necesario estar marcando
 como Nullable los tipos de referencia en la aplicación que puedan ser nulos, de lo 
 contrario podrían aparecer errores.
+
+====================
+Por defecto los controllers terminan su nombre con "Controller"
+
+Los decorators en C# se hacen con []
