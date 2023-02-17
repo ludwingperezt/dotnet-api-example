@@ -50,5 +50,50 @@ namespace WebApiAutores.Controllers
 
             return Ok();
         }
+
+        [HttpPut("{id:int}")] // ID del autor por medio de la ruta.
+        public async Task<ActionResult> Put(Autor autor, int id)
+        {
+            // Aqui se consulta la tabla de autores para verificar si existe
+            // algún autor con el ID recibido
+            var existeAutor = await context.Autores.AnyAsync(x => x.Id == id);
+
+            if (!existeAutor) 
+            {
+                return NotFound();
+            }
+
+            if (autor.Id != id) 
+            {
+                return BadRequest("El ID recibido no es igual al ID de la db");
+            } 
+
+            context.Update(autor);
+
+            await context.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> Delete(int id)
+        {
+            // Aqui se consulta la tabla de autores para verificar si existe
+            // algún autor con el ID recibido
+            var existeAutor = await context.Autores.AnyAsync(x => x.Id == id);
+
+            if (!existeAutor) 
+            {
+                return NotFound();
+            }
+
+            // Aqui es necesario pasar un objeto de tipo Autor que representa
+            // el elemento que va a ser eliminado.  Al menos debe tener el mismo
+            // ID que el elemento a eliminar.
+            context.Remove(new Autor() {Id = id});
+            await context.SaveChangesAsync();
+
+            return Ok();
+        }
     }
 }
