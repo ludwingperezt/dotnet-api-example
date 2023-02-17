@@ -1,3 +1,5 @@
+
+using Microsoft.EntityFrameworkCore;
 /**
 * En esta clase se hace la configuración de servicios y middlewares.
 * No es obligatorio usarla, porque se puede usar la clase Program.cs
@@ -21,6 +23,11 @@ namespace WebApiAutores
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            // Aqui se configura el acceso a la base de datos usando el string de conexión
+            // configurado en el archivo appsettings.Development.json bajo el key "defaultConnection"
+            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("defaultConnection")));
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();

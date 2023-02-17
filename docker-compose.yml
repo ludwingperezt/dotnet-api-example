@@ -1,0 +1,16 @@
+version: "3.8"
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    volumes:
+      - type: volume
+        source: sqlsrv_data
+        target: /var/opt/mssql
+    ports:
+      - 1433:1433
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=sup3rS3cr3TP@ss
+      - MSSQL_PID=Developer
+volumes:
+  sqlsrv_data:

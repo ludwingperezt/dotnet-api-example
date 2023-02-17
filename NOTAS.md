@@ -31,3 +31,38 @@ contrario podrían aparecer errores.
 Por defecto los controllers terminan su nombre con "Controller"
 
 Los decorators en C# se hacen con []
+
+Para instalar entity framework core para SqlServer:
+dotnet add package Microsoft.EntityFrameworkCore.SqlServer
+
+(Este es necesario si se usa dotnet cli)
+dotnet add package Microsoft.EntityFrameworkCore.Design
+
+==========================
+
+Dónde obtener las imagenes docker de ms sql server: 
+https://mcr.microsoft.com/en-us/product/mssql/server/about
+https://learn.microsoft.com/en-us/sql/linux/sql-server-linux-docker-container-configure?view=sql-server-ver16&pivots=cs1-bash
+
+==========================
+
+En el archivo appsettings.Development.json se colocan aquellos datos que no se deben poner en el código
+como por ejemplo credenciales a base de datos, etc.
+
+==========================
+
+* Instalar primero dotnet-ef
+https://learn.microsoft.com/en-us/ef/core/cli/dotnet
+https://learn.microsoft.com/en-us/dotnet/core/tools/global-tools#install-a-local-tool
+
+* Para este proyecto se instaló ef como una tool local, así que fue necesario crear un tool-manifest
+dotnet new tool-manifest
+
+Y luego instalar:
+dotnet tool install dotnet-ef
+
+Este comando crea la migracion inicial (con el nombre Inicial):
+dotnet ef migrations add Inicial
+
+Con el siguiente comando se ejecutan todas las migraciones pendientes hacia la db (si la base de datos no existe la crea):
+dotnet ef database update
