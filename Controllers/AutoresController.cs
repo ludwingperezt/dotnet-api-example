@@ -32,7 +32,7 @@ namespace WebApiAutores.Controllers
             // };
 
             // Aqui se retorna la lista de autores en la db leyendo de forma asíncrona.
-            return await context.Autores.ToListAsync();
+            return await context.Autores.Include(x => x.Libros).ToListAsync();
         }
 
         /**

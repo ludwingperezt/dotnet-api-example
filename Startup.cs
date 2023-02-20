@@ -1,4 +1,5 @@
 
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 /**
 * En esta clase se hace la configuración de servicios y middlewares.
@@ -22,7 +23,9 @@ namespace WebApiAutores
         */
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            // Esta línea se agrega para que al serialializar un objeto que referencia a una llave foránea
+            // no se haga una referencia ciclica.
+            services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
             // Aqui se configura el acceso a la base de datos usando el string de conexión
             // configurado en el archivo appsettings.Development.json bajo el key "defaultConnection"

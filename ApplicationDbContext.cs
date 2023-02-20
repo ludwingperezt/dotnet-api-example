@@ -17,6 +17,8 @@ namespace WebApiAutores
         // "Autores" a partir del esquema definido en la clase Autor
         public DbSet<Autor> Autores { get; set; }
 
-
+        // Se pone aqui el DbSet de libros para poder hacer queries directamente sobre
+        // la tabla de libros sin tener que pasar antes por la tabla de Autores.
+        public DbSet<Libro> Libros { get; set; }
     }
 }
