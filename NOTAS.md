@@ -66,3 +66,13 @@ dotnet ef migrations add Inicial
 
 Con el siguiente comando se ejecutan todas las migraciones pendientes hacia la db (si la base de datos no existe la crea):
 dotnet ef database update
+
+==========================
+
+* Un controlador es una clase que agrupa un conjunto de acciones, por lo regular, relacionadas
+  a un recurso.
+
+Los controladores se nombran por lo regular concatenando el nombre del recurso con la palabra Controller
+y por lo general van en una carpeta llamada "Controllers", por ejemplo:
+- AutoresController
+
