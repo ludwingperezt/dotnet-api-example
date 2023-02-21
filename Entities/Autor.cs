@@ -4,7 +4,12 @@ using WebApiAutores.validators;
 
 namespace WebApiAutores.Entities
 {
-    public class Autor
+    // Para hacer una validación a nivel de modelo se debe implementar la interfaz IValidatableObject
+    // Se pueden crear validaciones a nivel de modelo.
+    // Esto es útil cuando se quieren validar varios campos en conjunto para un modelo.
+    // Para esto es necesario que el modelo implemente la interfaz IValidatableObject
+    // y que luego se implementen los métodos de la interfaz
+    public class Autor:IValidatableObject
     {
         public int Id { get; set; }
 
@@ -34,11 +39,41 @@ namespace WebApiAutores.Entities
         // CreditCard valida la numeración de una tarjeta de credito
         [CreditCard]
         [NotMapped]
-        public int MyProperty { get; set; }
+        public string CreditCard { get; set; }
 
         // Url valida que el valor sea una URL correcta.
         [Url]
         [NotMapped]
         public string URL { get; set; }
+
+        public int Menor { get; set; }
+        public int Mayor { get; set; }
+
+        // Para la validación a nivel de modelo se implementa el método Validate()
+        // Para que esta validación se ejecute antes se deben pasar todas las reglas de
+        // validación asignadas a cada campo.
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            // En este caso a manera de ejemplo se repite la validación de la primera letra mayúscula
+            if (!string.IsNullOrEmpty(Nombre))
+            {
+                var primeraLetra = Nombre[0].ToString();
+
+                if (primeraLetra != primeraLetra.ToUpper())
+                {
+                    // Al generar el resultado a retornar se envía como parámetro el nombre de la propiedad.
+                    // Se usa yield para llenar el Enumerable de la lista de errores.
+                    yield return new ValidationResult("La primera letra del nombre debe ser mayuscula", 
+                        new string[] { nameof(Nombre) });
+                }
+            }
+
+            // Aqui se hace una validación de dos campos del objeto.
+            if (Menor > Mayor) 
+            {
+                yield return new ValidationResult("Este valor no puede ser mas grande que el campo Mayor",
+                    new string[] { nameof(Menor) });
+            }
+        }
     }
 }
