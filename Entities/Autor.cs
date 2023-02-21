@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using WebApiAutores.validators;
 
 namespace WebApiAutores.Entities
 {
@@ -14,8 +15,11 @@ namespace WebApiAutores.Entities
         // Pueden usarse varias validaciones sobre el campo, como por ejemplo en
         // este caso se usa StringLength para aceptar hasta un máximo de caracteres para
         // el nombre.
+        // PrimeraLetraMayusculaAttribute es un validador personalizado. En estos casos
+        // se omite el sufix Attibute.
         [Required(ErrorMessage ="El campo {0} es requerido")]
         [StringLength(maximumLength: 50, ErrorMessage = "El campo {0} no debe tener más de {1} caracteres")]
+        [PrimeraLetraMayuscula]
         public string Nombre { get; set; }
 
         public List<Libro> Libros { get; set; }
