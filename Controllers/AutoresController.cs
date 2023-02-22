@@ -13,15 +13,21 @@ namespace WebApiAutores.Controllers
     public class AutoresController: ControllerBase  // Se debe derivar de la clase ControllerBase
     {
         private readonly ApplicationDbContext context;
+        private readonly ILogger<AutoresController> logger;
 
-        public AutoresController(ApplicationDbContext context)
+        // Para enviar mensajes al log, el logger se debe colocar como dependencia de la clase.
+        // ILogger<AutoresController> declara el tipo de la clase donde se va utilizar para identificar
+        // de dónde provienen los mensajes.
+        public AutoresController(ApplicationDbContext context, ILogger<AutoresController> logger)
         {
             // Aqui se aplica la inyección de dependencias.
             // El ApplicationDbContext es creado en la clase Startup
             // y por medio del constructor se puede obtener aqui para usarlo luego
             // para acceder a la db.
             this.context = context;
+            this.logger = logger;
         }
+
         [HttpGet]  // Decorator que indica que se trata de un método HTTP GET
         public async Task<ActionResult<List<Autor>>> Get()
         {
@@ -30,6 +36,17 @@ namespace WebApiAutores.Controllers
             //     new Autor() { Id=1, Nombre="Juan"},
             //     new Autor() { Id=2, Nombre="Homero"}
             // };
+
+            // Los tipos de mensajes a log son los siguientes, ordenados desde el menos severo al más severo:
+            // Trace
+            // Debug
+            // Information
+            // Warning
+            // Error
+            // Critical
+            // * La configuración de loggin se hace en el archivo appsettings.json o appsettings.Development.json
+            // Enviar un mensaje de nivel Info.
+            logger.LogInformation("Obteniendo autores");
 
             // Aqui se retorna la lista de autores en la db leyendo de forma asíncrona.
             return await context.Autores.Include(x => x.Libros).ToListAsync();
