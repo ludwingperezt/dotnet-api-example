@@ -42,6 +42,13 @@ namespace WebApiAutores.Controllers
         [HttpPost]
         public async Task<ActionResult> Post (Autor autor)
         {
+            // Ejemplo de validación desde el controlador hacia la db:
+            var existeAutor = await context.Autores.AnyAsync(x => x.Nombre == autor.Nombre);
+
+            if (existeAutor) {
+                return BadRequest($"Ya existe un autor con el mismo nombre: {autor.Nombre}");
+            }
+
             // Aqui se marca el Autor recibido como listo para guardarlo a la db, pero aún no se ha guardado
             context.Add(autor);
 
