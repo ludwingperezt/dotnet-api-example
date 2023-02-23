@@ -33,7 +33,11 @@ var app = builder.Build();
 
 // app.MapControllers();
 
+// Instanciar un ILogger y luego inyectarla a la clase de startup para que haga el loggeo
+// de la respuesta a través de un middleware.
+var serviceLogger = (ILogger<Startup>) app.Services.GetService(typeof(ILogger<Startup>));
+
 // Ejecutar el resto de la configuración
-startup.Configure(app, app.Environment);
+startup.Configure(app, app.Environment, serviceLogger);
 
 app.Run();
