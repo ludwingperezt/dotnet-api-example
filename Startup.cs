@@ -32,6 +32,9 @@ namespace WebApiAutores
             // configurado en el archivo appsettings.Development.json bajo el key "defaultConnection"
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("defaultConnection")));
 
+            // Ejemplo de uso de los servicios para el filtro de caché:
+            services.AddResponseCaching();
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
@@ -64,6 +67,9 @@ namespace WebApiAutores
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            // Ejemplo de uso de un filtro de caché
+            app.UseResponseCaching();
 
             app.UseAuthorization();
 

@@ -119,5 +119,18 @@ namespace WebApiAutores.Controllers
 
             return Ok();
         }
+
+        // Ejemplo de un endpoint con implementación de cache por 15 segundos.
+        [HttpGet("GUID")]
+        [ResponseCache(Duration = 15)]
+        public ActionResult ObtenerGuids() 
+        {
+            var Timestamp = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds();
+            return Ok(new {
+                Nombre = "Respuesta de ejemplo",
+                Descripcion = "Este es un ejemplo de un endpoint con cache",
+                Timestamp = Timestamp
+            });
+        }
     }
 }
