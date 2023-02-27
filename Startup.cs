@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using WebApiAutores.Filtros;
 using WebApiAutores.Middlewares;
+using WebApiAutores.Servicios;
 /**
 * En esta clase se hace la configuración de servicios y middlewares.
 * No es obligatorio usarla, porque se puede usar la clase Program.cs
@@ -39,6 +40,10 @@ namespace WebApiAutores
             // Aqui se registra el filtro personalizado como Transient porque no se necesita ninguna
             // clase de manejo de estado
             services.AddTransient<MiFiltroAccion>();
+
+            // Ejemplo de uso de ejecución de un servicio recurrente. En el ejemplo se hace que un servicio
+            // ejecute una tarea al iniciar la aplicación y también cuando finaliza.
+            services.AddHostedService<EscribirEnArchivo>();
 
             // Ejemplo de uso de los servicios para el filtro de caché:
             services.AddResponseCaching();
