@@ -150,5 +150,18 @@ namespace WebApiAutores.Controllers
                 Timestamp = Timestamp
             });
         }
+
+        // Ejemplo de un endpoint con uso de un filtro.
+        [HttpGet("error")]
+        public ActionResult EjemploError() 
+        {
+            throw new NotImplementedException();
+            var Timestamp = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds();
+            return Ok(new {
+                Nombre = "Respuesta de ejemplo",
+                Descripcion = "Este es un ejemplo de un endpoint que lanza una excepción y desencadena un filtro de excepción global.",
+                Timestamp = Timestamp
+            });
+        }
     }
 }
