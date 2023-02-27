@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApiAutores.Entities;
+using WebApiAutores.Filtros;
 
 /**
 Controller para manejar Autores.
@@ -133,6 +134,19 @@ namespace WebApiAutores.Controllers
             return Ok(new {
                 Nombre = "Respuesta de ejemplo",
                 Descripcion = "Este es un ejemplo de un endpoint con cache",
+                Timestamp = Timestamp
+            });
+        }
+
+        // Ejemplo de un endpoint con uso de un filtro.
+        [HttpGet("filtro")]
+        [ServiceFilter(typeof(MiFiltroAccion))]
+        public ActionResult EjemploFiltro() 
+        {
+            var Timestamp = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds();
+            return Ok(new {
+                Nombre = "Respuesta de ejemplo",
+                Descripcion = "Este es un ejemplo de un endpoint con un filtro de acción",
                 Timestamp = Timestamp
             });
         }

@@ -2,6 +2,7 @@
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using WebApiAutores.Filtros;
 using WebApiAutores.Middlewares;
 /**
 * En esta clase se hace la configuración de servicios y middlewares.
@@ -32,6 +33,10 @@ namespace WebApiAutores
             // Aqui se configura el acceso a la base de datos usando el string de conexión
             // configurado en el archivo appsettings.Development.json bajo el key "defaultConnection"
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("defaultConnection")));
+
+            // Aqui se registra el filtro personalizado como Transient porque no se necesita ninguna
+            // clase de manejo de estado
+            services.AddTransient<MiFiltroAccion>();
 
             // Ejemplo de uso de los servicios para el filtro de caché:
             services.AddResponseCaching();
