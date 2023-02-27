@@ -11,6 +11,8 @@ namespace WebApiAutores.Entities
     // y que luego se implementen los métodos de la interfaz
     public class Autor // :IValidatableObject
     {
+        // Para EF, si un campo se llama "Id" entonces este campo se manejará como el 
+        // identificador de la tabla (llave primaria)
         public int Id { get; set; }
 
         // El attibute Required indica que el dato es obligatorio.

@@ -22,7 +22,7 @@ namespace WebApiAutores
 
 
         /**
-        * En esta función se van a configurar los servicios
+        * En esta función se van a configurar los servicios para iniciar la inyección de dependencias de cada uno.
         */
         public void ConfigureServices(IServiceCollection services)
         {

@@ -3,6 +3,8 @@ using WebApiAutores.Entities;
 
 namespace WebApiAutores
 {
+    // Esta es la clase central de Entity Framework Core.
+    // Aquí se configuran las tablas de la base de datos.
     public class ApplicationDbContext: DbContext
     {
         /**

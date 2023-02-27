@@ -36,6 +36,7 @@ Para instalar entity framework core para SqlServer:
 dotnet add package Microsoft.EntityFrameworkCore.SqlServer
 
 (Este es necesario si se usa dotnet cli)
+dotnet add package Microsoft.EntityFrameworkCore.Relational
 dotnet add package Microsoft.EntityFrameworkCore.Design
 
 ==========================
