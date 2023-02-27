@@ -1,4 +1,5 @@
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApiAutores.Entities;
@@ -121,8 +122,11 @@ namespace WebApiAutores.Controllers
         }
 
         // Ejemplo de un endpoint con implementación de cache por 15 segundos.
+        // La property [Authorize] solo permite el acceso al endpoint a los usuarios
+        // con un token válido.
         [HttpGet("GUID")]
         [ResponseCache(Duration = 15)]
+        [Authorize]
         public ActionResult ObtenerGuids() 
         {
             var Timestamp = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds();

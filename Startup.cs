@@ -1,5 +1,6 @@
 
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using WebApiAutores.Middlewares;
 /**
@@ -34,6 +35,9 @@ namespace WebApiAutores
 
             // Ejemplo de uso de los servicios para el filtro de caché:
             services.AddResponseCaching();
+
+            // Ejemplo de filtro de autenticacion
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             services.AddEndpointsApiExplorer();
@@ -71,6 +75,9 @@ namespace WebApiAutores
             // Ejemplo de uso de un filtro de caché
             app.UseResponseCaching();
 
+            // Este filtro es importante tenerlo en este punto antes de UseEnpoints
+            // porque la autorización se debe configurar antes de mapear los controlers con
+            // las acciones.
             app.UseAuthorization();
 
             // app.MapControllers();
