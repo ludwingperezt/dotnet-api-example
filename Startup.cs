@@ -3,8 +3,7 @@ using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using WebApiAutores.Filtros;
-using WebApiAutores.Middlewares;
-using WebApiAutores.Servicios;
+
 /**
 * En esta clase se hace la configuración de servicios y middlewares.
 * No es obligatorio usarla, porque se puede usar la clase Program.cs
@@ -35,18 +34,7 @@ namespace WebApiAutores
 
             // Aqui se configura el acceso a la base de datos usando el string de conexión
             // configurado en el archivo appsettings.Development.json bajo el key "defaultConnection"
-            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("defaultConnection")));
-
-            // Aqui se registra el filtro personalizado como Transient porque no se necesita ninguna
-            // clase de manejo de estado
-            services.AddTransient<MiFiltroAccion>();
-
-            // Ejemplo de uso de ejecución de un servicio recurrente. En el ejemplo se hace que un servicio
-            // ejecute una tarea al iniciar la aplicación y también cuando finaliza.
-            services.AddHostedService<EscribirEnArchivo>();
-
-            // Ejemplo de uso de los servicios para el filtro de caché:
-            services.AddResponseCaching();
+            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("defaultConnection"))); 
 
             // Ejemplo de filtro de autenticacion
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
@@ -61,19 +49,6 @@ namespace WebApiAutores
         */
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger) 
         {
-            // ================================ INICIO de ejemplos de middlewares =====================================
-
-            // Forma no. 1 de usar el middleware y la más sencilla.
-            // En este caso se expone cual es la clase utilizada.
-            // app.UseMiddleware<LoggearRespuestaHTTPMiddleware>();
-
-            // Forma no. 2 de usar el middleware.  Para esta forma
-            // hace falta crear una clase estática de utilidad.
-            app.UseLoggearRespuestaHTTP();
-
-            
-            // ================================ FIN de ejemplos de middlewares =====================================
-
             if (env.IsDevelopment())
             {
                 app.UseSwagger();
@@ -83,9 +58,6 @@ namespace WebApiAutores
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
-            // Ejemplo de uso de un filtro de caché
-            app.UseResponseCaching();
 
             // Este filtro es importante tenerlo en este punto antes de UseEnpoints
             // porque la autorización se debe configurar antes de mapear los controlers con

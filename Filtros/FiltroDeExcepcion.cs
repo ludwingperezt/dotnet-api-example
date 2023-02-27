@@ -10,9 +10,9 @@ namespace WebApiAutores.Filtros
     // aplica de forma global a todo el API
     public class FiltroDeExcepcion: ExceptionFilterAttribute
     {
-        private readonly ILogger<MiFiltroAccion> logger;
+        private readonly ILogger<FiltroDeExcepcion> logger;
 
-        public FiltroDeExcepcion(ILogger<MiFiltroAccion> logger)
+        public FiltroDeExcepcion(ILogger<FiltroDeExcepcion> logger)
         {
             this.logger = logger;
         }
