@@ -15,6 +15,8 @@ namespace WebApiAutores.Utils
         {
             // Esto configura el mapeo entre una clase origen a una clase destino.
             CreateMap<AutorCreacionDTO, Autor>();
+
+            CreateMap<Autor, AutorDTO>();
         }
     }
 }

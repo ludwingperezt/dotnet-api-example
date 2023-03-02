@@ -104,3 +104,69 @@ quieren obtener los parámetros.  Eso se puede hacer con atributos:
     public async Task<ActionResult> Put([FromBody] Autor autor, [FromRoute] int id, [FromHeader] string token, [FromQuery] string nombre)
     {
     }
+
+
+Tipos de datos de retorno:
+
+En este caso no estamos usando programación asíncrona. Si el autor es encontrado no hay
+problema, pero de lo contrario debemos retornar una código de error 404 para indicar
+que no fue encontrado, pero en este caso eso nos daría un error porque el tipo de dato
+de retorno DEBE ser un objeto Autor y la llamada a NotFound() retorna un tipo de objeto
+que deriva de ActionResult.
+
+        [HttpGet("{id:int}")]
+        public Autor Get(int id)
+        {
+            var autor = await context.Autores.FirstOrDefault(autorDB => autorDB.Id == id);
+
+            if (autor == null)
+            {
+                return NotFound();
+            }
+
+            return autor;
+        }
+
+Para evitar esto se recomienda que se retorne un tipo de dato "genérico", que es del tipo
+ActionResult o IActionResult.
+
+Al especificar un tipo de dato de retorno ActionResult<T> se logra retornar un objeto de 
+tipo Autor (para este ejemplo, pero puede ser de cualquier tipo siempre que se especificique) 
+o cualquier objeto que derive de la clase ActionResult, como NotFound(), Ok(), etc.
+Se recomienda usar como tipo de retorno ActionResult<T> para especificar el tipo de dato a
+retornar.
+
+        [HttpGet("{id:int}")]
+        public ActionResult<Autor> Get(int id)
+        {
+            var autor = await context.Autores.FirstOrDefault(autorDB => autorDB.Id == id);
+
+            if (autor == null)
+            {
+                return NotFound();
+            }
+
+            // return 1; // esto no sería permitido
+            // return "autor"; // esto no sería permitido
+
+            return autor;
+        }
+
+En este otro caso, cuando el tipo de dato de retorno es IActionResult entonces cualquier objeto
+que se quiera retornar se debe "envolver" en un objeto de cualquier clase que derive de ActionResult,
+por ejemplo en este caso en un objeto retornado por la función Ok()
+
+        [HttpGet("{id:int}")]
+        public IActionResult Get(int id)
+        {
+            var autor = await context.Autores.FirstOrDefault(autorDB => autorDB.Id == id);
+
+            if (autor == null)
+            {
+                return NotFound();
+            }
+
+            // return Ok(1); // Esto funcionaría
+            // return Ok(1); // Esto funcionaría
+            return Ok(autor);
+        }

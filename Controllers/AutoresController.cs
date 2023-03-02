@@ -37,11 +37,34 @@ namespace WebApiAutores.Controllers
         }
 
         [HttpGet]  // Decorator que indica que se trata de un método HTTP GET
-        public async Task<ActionResult<List<Autor>>> Get()
+        public async Task<List<AutorDTO>> Get()
         {
             // Aqui se retorna la lista de autores en la db leyendo de forma asíncrona.
             // return await context.Autores.Include(x => x.Libros).ToListAsync();
-            return await context.Autores.ToListAsync();
+            var autores = await context.Autores.ToListAsync();
+            return mapper.Map<List<AutorDTO>>(autores);
+        }
+
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<AutorDTO>> Get(int id)
+        {
+            var autor = await context.Autores.FirstOrDefaultAsync(autorDB => autorDB.Id == id);
+
+            if (autor == null)
+            {
+                return NotFound();
+            }
+
+            return mapper.Map<AutorDTO>(autor);
+        }
+
+
+        [HttpGet("{nombre}")]
+        public async Task<ActionResult<List<AutorDTO>>> Get([FromRoute] string nombre)
+        {
+            var autores = await context.Autores.Where(autorDB => autorDB.Nombre.Contains(nombre)).ToListAsync();
+
+            return mapper.Map<List<AutorDTO>>(autores);
         }
 
         /**
