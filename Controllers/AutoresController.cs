@@ -1,7 +1,9 @@
 
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using WebApiAutores.DTOs;
 using WebApiAutores.Entities;
 
 /**
@@ -15,16 +17,23 @@ namespace WebApiAutores.Controllers
     {
         private readonly ApplicationDbContext context;
 
+        public ILogger<AutoresController> Logger { get; }
+        private readonly IMapper mapper;
+
         // Para enviar mensajes al log, el logger se debe colocar como dependencia de la clase.
         // ILogger<AutoresController> declara el tipo de la clase donde se va utilizar para identificar
         // de dónde provienen los mensajes.
-        public AutoresController(ApplicationDbContext context, ILogger<AutoresController> logger)
+        public AutoresController(ApplicationDbContext context, 
+            ILogger<AutoresController> logger,
+            IMapper mapper)
         {
             // Aqui se aplica la inyección de dependencias.
             // El ApplicationDbContext es creado en la clase Startup
             // y por medio del constructor se puede obtener aqui para usarlo luego
             // para acceder a la db.
             this.context = context;
+            Logger = logger;
+            this.mapper = mapper;
         }
 
         [HttpGet]  // Decorator que indica que se trata de un método HTTP GET
@@ -40,14 +49,19 @@ namespace WebApiAutores.Controllers
         Para los métodos asíncronos es requisito devolver Task<ActionResult> o ValueTask
         */
         [HttpPost]
-        public async Task<ActionResult> Post (Autor autor)
+        public async Task<ActionResult> Post (AutorCreacionDTO autorDto)
         {
             // Ejemplo de validación desde el controlador hacia la db:
-            var existeAutor = await context.Autores.AnyAsync(x => x.Nombre == autor.Nombre);
+            var existeAutor = await context.Autores.AnyAsync(x => x.Nombre == autorDto.Nombre);
 
             if (existeAutor) {
-                return BadRequest($"Ya existe un autor con el mismo nombre: {autor.Nombre}");
+                return BadRequest($"Ya existe un autor con el mismo nombre: {autorDto.Nombre}");
             }
+
+            // Mapear entre la clase DTO y la clase Entity que maneja EF.
+            // Lo que se pide en esta línea es que el objeto autorDto se mapee a un objeto de la
+            // clase Autor para poder ser guardado en la db.
+            var autor = mapper.Map<Autor>(autorDto);
 
             // Aqui se marca el Autor recibido como listo para guardarlo a la db, pero aún no se ha guardado
             context.Add(autor);

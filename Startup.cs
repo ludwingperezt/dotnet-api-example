@@ -18,6 +18,7 @@ namespace WebApiAutores
             Configuration = configuration;
         }
 
+        // Este elemento permite acceder a los archivos de appsettings.
         public IConfiguration Configuration { get; }
 
 
@@ -34,6 +35,7 @@ namespace WebApiAutores
 
             // Aqui se configura el acceso a la base de datos usando el string de conexión
             // configurado en el archivo appsettings.Development.json bajo el key "defaultConnection"
+            // En este caso se está utilizando EF core para que trabaje con SqlServer
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("defaultConnection"))); 
 
             // Ejemplo de filtro de autenticacion
@@ -42,6 +44,9 @@ namespace WebApiAutores
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
+
+            // Aqui se inicia y configura el automapper para el proyecto.
+            services.AddAutoMapper(typeof(Startup));
         }
 
         /** 
