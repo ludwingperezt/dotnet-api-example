@@ -1,0 +1,1 @@
+En esta carpeta están definidas las clases de los Data Transfer Objects.
