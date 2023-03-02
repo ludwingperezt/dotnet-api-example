@@ -22,5 +22,7 @@ namespace WebApiAutores
         // Se pone aqui el DbSet de libros para poder hacer queries directamente sobre
         // la tabla de libros sin tener que pasar antes por la tabla de Autores.
         public DbSet<Libro> Libros { get; set; }
+
+        public DbSet<Comentario> Comenatarios { get; set; }
     }
 }
