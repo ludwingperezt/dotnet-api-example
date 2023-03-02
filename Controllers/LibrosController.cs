@@ -30,7 +30,15 @@ namespace WebApiAutores.Controllers
             // también a la información del autor.
             // return await context.Libros.Include(x => x.Autor).FirstOrDefaultAsync(x => x.Id == id);
 
-            var libro = await context.Libros.FirstOrDefaultAsync(libroDB => libroDB.Id == id);
+            // El .Include() hace un join para que en la misma consulta se obtengan los comentarios.
+            // Para hacer Lazy Loading (recomendable) entonces lo mejor es omitir el Include() y quitar
+            // el mapeo a la clase ComentarioDTO en la clase LibroDTO
+            // var libro = await context.Libros.Include(libroDB => libroDB.Comentarios)
+            //     .FirstOrDefaultAsync(libroDB => libroDB.Id == id);
+
+            var libro = await context.Libros
+                .FirstOrDefaultAsync(libroDB => libroDB.Id == id);
+
             return mapper.Map<LibroDTO>(libro);
         }
 
