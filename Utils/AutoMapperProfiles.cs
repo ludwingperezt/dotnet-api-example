@@ -18,16 +18,21 @@ namespace WebApiAutores.Utils
 
             CreateMap<Autor, AutorDTO>();
 
+            CreateMap<Autor, AutorDTOConLibros>()
+                .ForMember(autorDto => autorDto.Libros, opciones => opciones.MapFrom(MapAutorDTOLibros));
+
             // Aqui se especifica una regla específica de mapeo para el campo AutoresIds
             // de la clase LibroCreacionDTO, que convierte la lista de ID's de
             // autores recibida (que es una lista de enteros) y la convierte
             // en objetos AutorLibro listos para ser insertados en la db.
             CreateMap<LibroCreacionDTO, Libro>().ForMember(libro => libro.AutoresLibros, opciones => opciones.MapFrom(MapAutoresLibros));
 
+            CreateMap<Libro, LibroDTO>();
+            
             // Configurar un mapeo de la clase Libro hacia la clase LibroDTO
             // para presentar los autores de un libro a través de la relación
             // muchos a muchos AutorLibro
-            CreateMap<Libro, LibroDTO>()
+            CreateMap<Libro, LibroDTOConAutores>()
                 .ForMember(libroDto => libroDto.Autores, opciones => opciones.MapFrom(MapLibroDTOAutores));
 
             CreateMap<ComentarioCreacionDTO, Comentario>();
@@ -68,6 +73,24 @@ namespace WebApiAutores.Utils
                 {
                     Id = autorLibro.AutorId,
                     Nombre = autorLibro.Autor.Nombre
+                });
+            }
+
+            return resultado;
+        }
+
+        private List<LibroDTO> MapAutorDTOLibros(Autor autor, AutorDTO autorDto)
+        {
+            var resultado = new List<LibroDTO>();
+
+            if (autor.AutoresLibros == null) { return resultado; }
+
+            foreach (var autorLibro in autor.AutoresLibros)
+            {
+                resultado.Add(new LibroDTO()
+                {
+                    Id = autorLibro.LibroId,
+                    Titulo = autorLibro.Libro.Titulo
                 });
             }
 

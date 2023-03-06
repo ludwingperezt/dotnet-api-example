@@ -11,5 +11,10 @@ namespace WebApiAutores.DTOs
         public int Id  { get; set; }
 
         public string Nombre { get; set; }
+
+        // La lista de libros se trasladó a AutorDTOConLibros para que al listar
+        // los libros de un autor, el campo "autores" de cada libro NO aparezca en
+        // null.
+        // public List<LibroDTO>  Libros { get; set; }
     }
 }

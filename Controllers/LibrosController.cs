@@ -24,7 +24,7 @@ namespace WebApiAutores.Controllers
         }
 
         [HttpGet("{id:int}")]
-        public async Task<ActionResult<LibroDTO>> Get(int id)
+        public async Task<ActionResult<LibroDTOConAutores>> Get(int id)
         {
             // El .Include() hace un join para que en la misma consulta se obtengan los comentarios.
             // Para hacer Lazy Loading (recomendable) entonces lo mejor es omitir el Include() y quitar
@@ -40,7 +40,7 @@ namespace WebApiAutores.Controllers
             // Ordenar los autores del libro según el orden asignado a cada uno.
             libro.AutoresLibros = libro.AutoresLibros.OrderBy(x => x.Orden).ToList();
 
-            return mapper.Map<LibroDTO>(libro);
+            return mapper.Map<LibroDTOConAutores>(libro);
         }
 
         [HttpPost]

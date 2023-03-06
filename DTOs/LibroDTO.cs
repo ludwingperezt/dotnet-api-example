@@ -17,6 +17,7 @@ namespace WebApiAutores.DTOs
         // entonces siempre se retorna una lista vacía).
         // public List<ComentarioDTO> Comentarios { get; set; }
 
-        public List<AutorDTO> Autores { get; set; }
+        // La lista de autores se trasladó a LibroDTOConAutores
+        // public List<AutorDTO> Autores { get; set; }
     }
 }
