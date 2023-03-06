@@ -16,5 +16,7 @@ namespace WebApiAutores.DTOs
         // que obtiene un libro (si se quita el Include() pero no se quita esta propiedad
         // entonces siempre se retorna una lista vacía).
         // public List<ComentarioDTO> Comentarios { get; set; }
+
+        public List<AutorDTO> Autores { get; set; }
     }
 }

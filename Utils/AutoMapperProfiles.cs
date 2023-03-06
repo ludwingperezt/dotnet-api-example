@@ -24,7 +24,11 @@ namespace WebApiAutores.Utils
             // en objetos AutorLibro listos para ser insertados en la db.
             CreateMap<LibroCreacionDTO, Libro>().ForMember(libro => libro.AutoresLibros, opciones => opciones.MapFrom(MapAutoresLibros));
 
-            CreateMap<Libro, LibroDTO>();
+            // Configurar un mapeo de la clase Libro hacia la clase LibroDTO
+            // para presentar los autores de un libro a través de la relación
+            // muchos a muchos AutorLibro
+            CreateMap<Libro, LibroDTO>()
+                .ForMember(libroDto => libroDto.Autores, opciones => opciones.MapFrom(MapLibroDTOAutores));
 
             CreateMap<ComentarioCreacionDTO, Comentario>();
 
@@ -45,6 +49,26 @@ namespace WebApiAutores.Utils
                 // El ID de libro no se pone aquí porque eso lo hace EF Core
                 // al momento de insertar el libro.
                 resultado.Add(new AutorLibro() { AutorId = autorId });
+            }
+
+            return resultado;
+        }
+
+        // En esta función se mapean desde un objeto Libro hacia un objeto LibroDTO
+        // los autores de un libro pasando por la tabla intermedia AutorLibro
+        private List<AutorDTO> MapLibroDTOAutores(Libro libro, LibroDTO libroDTO)
+        {
+            var resultado = new List<AutorDTO>();
+
+            if (libro.AutoresLibros == null) { return resultado; }
+
+            foreach (var autorLibro in libro.AutoresLibros)
+            {
+                resultado.Add(new AutorDTO() 
+                {
+                    Id = autorLibro.AutorId,
+                    Nombre = autorLibro.Autor.Nombre
+                });
             }
 
             return resultado;

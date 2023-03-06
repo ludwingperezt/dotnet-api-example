@@ -26,10 +26,6 @@ namespace WebApiAutores.Controllers
         [HttpGet("{id:int}")]
         public async Task<ActionResult<LibroDTO>> Get(int id)
         {
-            // Aqui se obtiene la información de un libro y con la llamada a Include() se llama
-            // también a la información del autor.
-            // return await context.Libros.Include(x => x.Autor).FirstOrDefaultAsync(x => x.Id == id);
-
             // El .Include() hace un join para que en la misma consulta se obtengan los comentarios.
             // Para hacer Lazy Loading (recomendable) entonces lo mejor es omitir el Include() y quitar
             // el mapeo a la clase ComentarioDTO en la clase LibroDTO
@@ -37,7 +33,12 @@ namespace WebApiAutores.Controllers
             //     .FirstOrDefaultAsync(libroDB => libroDB.Id == id);
 
             var libro = await context.Libros
+                .Include(libroDB => libroDB.AutoresLibros) // Aqui se incluye en la consulta, la relación muchos-a-muchos con autores
+                .ThenInclude(autorLibroDB => autorLibroDB.Autor) // Aqui ya se incluye la información del Autor a través de la relación AutorLibro
                 .FirstOrDefaultAsync(libroDB => libroDB.Id == id);
+
+            // Ordenar los autores del libro según el orden asignado a cada uno.
+            libro.AutoresLibros = libro.AutoresLibros.OrderBy(x => x.Orden).ToList();
 
             return mapper.Map<LibroDTO>(libro);
         }
