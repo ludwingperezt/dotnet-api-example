@@ -110,7 +110,7 @@ namespace WebApiAutores.Controllers
         }
 
         [HttpPut("{id:int}")] // ID del autor por medio de la ruta.
-        public async Task<ActionResult> Put(Autor autor, int id)
+        public async Task<ActionResult> Put(AutorCreacionDTO autorCreacionDto, int id)
         {
             // Aqui se consulta la tabla de autores para verificar si existe
             // algún autor con el ID recibido
@@ -121,16 +121,15 @@ namespace WebApiAutores.Controllers
                 return NotFound();
             }
 
-            if (autor.Id != id) 
-            {
-                return BadRequest("El ID recibido no es igual al ID de la db");
-            } 
+            var autor = mapper.Map<Autor>(autorCreacionDto);
+            
+            autor.Id = id;
 
             context.Update(autor);
 
             await context.SaveChangesAsync();
 
-            return Ok();
+            return NoContent();
         }
 
         [HttpDelete("{id}")]
