@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApiAutores.DTOs;
@@ -117,6 +118,76 @@ namespace WebApiAutores.Controllers
                     libro.AutoresLibros[i].Orden = i;
                 }
             }
+        }
+
+        /**
+        Con PATCH se pueden hacer actualizaciones parciales de una entidad.
+        A diferencia de PUT, que lo que hace es sobreescribir aquellos datos
+        que no se reciban en la petición HTTP, con PATCH se pueden actualizar solo
+        los campos que se especifiquen.  Para ello se usa el estándar RFC 6902
+        que corresponde a JSON Patch.  En ese estándar se especifica cómo hacer
+        una actualización parcial. Un ejemplo de una petición de actualización
+        parcial para cambiar solamente el título de un libro sería:
+            [
+                {
+                    "path": "/titulo",
+                    "op": "replace",
+                    "value": "Nuevo título actualizado con patch"
+                }
+            ]
+
+            Donde:
+            - "path" especifica el campo a cambiar (debe llevar la / antes del nombre del campo)
+            - "op" especifica qué operación se hará, en este caso es un reemplazo
+                de la data original por la que se están enviando en la petición
+                en el campo "value".
+            - "value" Es el nuevo valor que se quere aplicar al campo.
+
+        Para hacer todo este proceso es necesario instalar:
+        dotnet add package Microsoft.AspNetCore.Mvc.NewtonsoftJson
+
+        Y luego configurar .AddNewtonsoftJson() en la clase Startup, en el 
+        método ConfigureServices().
+        */
+        [HttpPatch("{id:int}")]
+        public async Task<ActionResult> Patch(int id, JsonPatchDocument<LibroPatchDTO> patchDocument)
+        {
+            // si el Patch document es nulo significa que el documento enviado
+            // por el cliente no es válido.
+            if (patchDocument == null)
+            {
+                return BadRequest();
+            }
+
+            var libroDb = await context.Libros.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (libroDb == null)
+            {
+                return NotFound();
+            }
+
+            // LO que se hace aquí es llenar el objeto de tipo LibroPatchDTO
+            // con los datos que vienen de la base de datos (libroDb) y luego
+            // a ese objeto se le aplican los cambios que se recibieron en el
+            // patch document.            
+            var libroDto = mapper.Map<LibroPatchDTO>(libroDb);
+            // Si hay algún error entonces se coloca en el ModelState 
+            patchDocument.ApplyTo(libroDto, ModelState);
+
+            // Se hacen las validaciones de los campos.
+            var esValido = TryValidateModel(libroDto);
+
+            if (!esValido)
+            {
+                // En el ModelState van a estar todos los errores encontrados.
+                return BadRequest(ModelState);
+            }
+
+            // Guardar los cambios.
+            mapper.Map(libroDto, libroDb);
+            await context.SaveChangesAsync();
+
+            return NoContent();
         }
 
     }

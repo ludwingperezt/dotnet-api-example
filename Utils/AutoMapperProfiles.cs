@@ -35,6 +35,9 @@ namespace WebApiAutores.Utils
             CreateMap<Libro, LibroDTOConAutores>()
                 .ForMember(libroDto => libroDto.Autores, opciones => opciones.MapFrom(MapLibroDTOAutores));
 
+            // Con ReverseMap se configura también el mapeo inverso.
+            CreateMap<LibroPatchDTO, Libro>().ReverseMap();
+
             CreateMap<ComentarioCreacionDTO, Comentario>();
 
             CreateMap<Comentario, ComentarioDTO>();

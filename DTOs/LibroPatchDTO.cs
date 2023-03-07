@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WebApiAutores.DTOs
 {
-    public class LibroCreacionDTO
+    public class LibroPatchDTO
     {
         // [PrimeraLetraMayuscula]
         [StringLength(maximumLength: 120)]
@@ -14,7 +14,5 @@ namespace WebApiAutores.DTOs
         public string Titulo { get; set; }
 
         public DateTime FechaPublicacion { get; set; }
-
-        public List<int> AutoresIds { get; set; }
     }
 }

@@ -29,9 +29,11 @@ namespace WebApiAutores
         {
             // Esta línea se agrega para que al serialializar un objeto que referencia a una llave foránea
             // no se haga una referencia ciclica.
+            // También se agrega Newtonsoft para dar soporte a JSON Patch.
             services.AddControllers(opciones => {
                 opciones.Filters.Add(typeof(FiltroDeExcepcion));  // Ejemplo de cómo aplicar un filtro de excepción global.
-            }).AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+            }).AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles)
+            .AddNewtonsoftJson();
 
             // Aqui se configura el acceso a la base de datos usando el string de conexión
             // configurado en el archivo appsettings.Development.json bajo el key "defaultConnection"

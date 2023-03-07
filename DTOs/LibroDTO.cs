@@ -11,6 +11,8 @@ namespace WebApiAutores.DTOs
 
         public string Titulo { get; set; }
 
+        public DateTime FechaPublicacion { get; set; }
+
         // Si lo que se desea es hacer Lazy Loading (recomendado), entonces se omite
         // la propiedad Comentarios.  También se debe quitar el Include() en el query
         // que obtiene un libro (si se quita el Include() pero no se quita esta propiedad

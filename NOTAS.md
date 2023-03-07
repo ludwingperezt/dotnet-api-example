@@ -77,3 +77,14 @@ Los controladores se nombran por lo regular concatenando el nombre del recurso c
 y por lo general van en una carpeta llamada "Controllers", por ejemplo:
 - AutoresController
 
+
+==========================
+
+Actualizaciones parciales con PATCH
+  RFC 5789
+  JSON patch (RFC 6902) 
+
+Para hacer actualizaciones parciales con patch es necesario instalar un paquete:
+
+dotnet add package Microsoft.AspNetCore.Mvc.NewtonsoftJson
+
