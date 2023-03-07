@@ -69,7 +69,46 @@ namespace WebApiAutores.Controllers
             }
 
             var libro = mapper.Map<Libro>(libroCreacion);
+            AsignarOrdenAutores(libro);            
 
+            context.Add(libro);
+            await context.SaveChangesAsync();
+
+            var libroCreadoDTO = mapper.Map<LibroDTO>(libro);
+
+            return CreatedAtRoute("obtenerLibro", new { id = libro.Id }, libroCreadoDTO);
+        }
+
+
+        [HttpPut("{id:int}")]
+        public async Task<ActionResult> Put(int id, LibroCreacionDTO libroCreacionDto)
+        {
+            var libroDb = await context.Libros
+                .Include(x => x.AutoresLibros)
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            if (libroDb == null)
+            {
+                return NotFound();
+            }
+
+            // En esta sentencia lo que se hace es tomar los valores de las propiedades
+            // del objeto libroCreacionDto y llevarlas a libroDb, manteniendo la
+            // misma instancia, ya que esa instancia de tipo Libro está registrada
+            // en la memoria de EF Core, por lo tanto cualquier cambio puede
+            // ser persistido sin demasiada complejidad.
+            libroDb = mapper.Map(libroCreacionDto, libroDb);
+            
+            // Reasignar el orden de autores luego de la actualización de campos
+            AsignarOrdenAutores(libroDb);
+
+            await context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        private void AsignarOrdenAutores(Libro libro)
+        {
             // Recorrer los autores para asignar el orden.
             if (libro.AutoresLibros != null)
             {
@@ -78,13 +117,6 @@ namespace WebApiAutores.Controllers
                     libro.AutoresLibros[i].Orden = i;
                 }
             }
-
-            context.Add(libro);
-            await context.SaveChangesAsync();
-
-            var libroCreadoDTO = mapper.Map<LibroDTO>(libro);
-
-            return CreatedAtRoute("obtenerLibro", new { id = libro.Id }, libroCreadoDTO);
         }
 
     }
