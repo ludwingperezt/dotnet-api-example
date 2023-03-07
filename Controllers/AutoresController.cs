@@ -45,7 +45,7 @@ namespace WebApiAutores.Controllers
             return mapper.Map<List<AutorDTO>>(autores);
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet("{id:int}", Name ="obtenerAutor")]
         public async Task<ActionResult<AutorDTOConLibros>> Get(int id)
         {
             var autor = await context.Autores
@@ -95,7 +95,18 @@ namespace WebApiAutores.Controllers
             // Aquí se guardan los cambios a la db de forma asíncrona
             await context.SaveChangesAsync();
 
-            return Ok();
+            //
+            var autorCreatedDto = mapper.Map<AutorDTO>(autor);
+
+            // La llamada a la función CreatedAtRoute() lo que hace es que en la
+            // respuesta al método POST de creación se retornan los datos del
+            // autor recién creado representado con un objeto de tipo AutorDTO
+            // pero también se retorna entre los encabezados de la respuesta
+            // la URL para consultar el recurso; dicha ruta se configuró bajo 
+            // el nombre "obtenerAutor" y por medio de un objeto anónimo se le
+            // pasan los parámetros de ruta que requiere, la ruta se retorna
+            // en el header "Location".
+            return CreatedAtRoute("obtenerAutor", new { id = autor.Id }, autorCreatedDto);
         }
 
         [HttpPut("{id:int}")] // ID del autor por medio de la ruta.

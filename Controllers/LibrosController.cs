@@ -23,7 +23,7 @@ namespace WebApiAutores.Controllers
             this.mapper = mapper;
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet("{id:int}", Name ="obtenerLibro")]
         public async Task<ActionResult<LibroDTOConAutores>> Get(int id)
         {
             // El .Include() hace un join para que en la misma consulta se obtengan los comentarios.
@@ -81,7 +81,10 @@ namespace WebApiAutores.Controllers
 
             context.Add(libro);
             await context.SaveChangesAsync();
-            return Ok();
+
+            var libroCreadoDTO = mapper.Map<LibroDTO>(libro);
+
+            return CreatedAtRoute("obtenerLibro", new { id = libro.Id }, libroCreadoDTO);
         }
 
     }
