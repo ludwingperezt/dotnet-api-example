@@ -38,6 +38,11 @@ namespace WebApiAutores.Controllers
                 .ThenInclude(autorLibroDB => autorLibroDB.Autor) // Aqui ya se incluye la información del Autor a través de la relación AutorLibro
                 .FirstOrDefaultAsync(libroDB => libroDB.Id == id);
 
+            if (libro == null)
+            {
+                return NotFound();
+            }
+
             // Ordenar los autores del libro según el orden asignado a cada uno.
             libro.AutoresLibros = libro.AutoresLibros.OrderBy(x => x.Orden).ToList();
 
@@ -190,5 +195,24 @@ namespace WebApiAutores.Controllers
             return NoContent();
         }
 
+    
+        [HttpDelete("{id:int}")]
+        public async Task<ActionResult> Delete(int id)
+        {
+            var existeLibro = await context.Libros.AnyAsync(x => x.Id == id);
+
+            if (!existeLibro) 
+            {
+                return NotFound();
+            }
+
+            // Aqui es necesario pasar un objeto de tipo Autor que representa
+            // el elemento que va a ser eliminado.  Al menos debe tener el mismo
+            // ID que el elemento a eliminar.
+            context.Remove(new Libro() {Id = id});
+            await context.SaveChangesAsync();
+
+            return NoContent();
+        }
     }
 }
